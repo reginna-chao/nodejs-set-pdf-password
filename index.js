@@ -1,4 +1,4 @@
-const { PDFDocument } = require('pdf-lib');
+const Recipe = require('muhammara').Recipe;
 const fs = require('fs').promises;
 const path = require('path');
 const readline = require('readline');
@@ -7,20 +7,18 @@ const inputFolderPath = './input';
 const outputFolderPath = './output';
 
 async function addPasswordToPDF (inputPdfPath, outputPdfPath, password) {
-    // Read the existing PDF file
-    const existingPdfBytes = await fs.readFile(inputPdfPath);
+    // Read & Load the existing PDF file
+    const pdfDoc = new Recipe(inputPdfPath, outputPdfPath);
 
-    // Load the existing PDF
-    const pdfDoc = await PDFDocument.load(existingPdfBytes);
-
-    // Add password protection
-    pdfDoc.setPassword(password);
-
-    // Save the modified PDF with password protection
-    const modifiedPdfBytes = await pdfDoc.save();
-
-    // Write the modified PDF to a new file
-    await fs.writeFile(outputPdfPath, modifiedPdfBytes);
+    pdfDoc
+        // Set password protection
+        .encrypt({
+            userPassword: password,
+            ownerPassword: password,
+            // userProtectionFlag: 4
+        })
+        // Write the modified PDF to a new file
+        .endPDF();
 
     console.log(`Password protection added to ${outputPdfPath}`);
 }
@@ -31,12 +29,39 @@ async function getPasswordFromUser () {
         output: process.stdout,
     });
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         rl.question('Please enter the password: ', password => {
             rl.close();
-            resolve(password);
+            if (password.trim() !== '') {
+                resolve(password.trim());
+            } else {
+                console.log('\x1b[31m', 'Error: No password entered.', '\x1b[0m');
+                reject();
+            }
         });
     });
+}
+
+async function fileExists(filePath) {
+    try {
+        await fs.access(filePath, fs.constants.F_OK);
+        return true; // File exists
+    } catch (error) {
+        return false; // File does not exist
+    }
+}
+
+async function removeFile(filePath) {
+    if (await fileExists(filePath)) {
+        try {
+            await fs.unlink(filePath);
+            console.log(`File removed: ${filePath}`);
+        } catch (error) {
+            console.error(`Error removing file ${filePath}:`, error);
+        }
+    } else {
+        console.log(`File does not exist: ${filePath}`);
+    }
 }
 
 async function processFolder () {
@@ -53,6 +78,9 @@ async function processFolder () {
             if (path.extname(file).toLowerCase() === '.pdf') {
                 // Get the password from the user input
                 const password = await getPasswordFromUser();
+
+                // Remove old file
+                await removeFile(outputFilePath);
 
                 await addPasswordToPDF(inputFilePath, outputFilePath, password);
             }
