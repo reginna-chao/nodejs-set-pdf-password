@@ -1,0 +1,15 @@
+{
+  "name": "pdf-set-password",
+  "version": "1.0.0",
+  "description": "Use Node.js set PDF password.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Reginna Chao",
+  "license": "MIT",
+  "dependencies": {
+    "pdf-lib": "^1.17.1"
+  }
+}
