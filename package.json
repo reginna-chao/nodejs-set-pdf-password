@@ -10,6 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "muhammara": "^4.1.0"
   }
 }

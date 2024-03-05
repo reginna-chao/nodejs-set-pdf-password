@@ -2,9 +2,14 @@ const Recipe = require('muhammara').Recipe;
 const fs = require('fs').promises;
 const path = require('path');
 const readline = require('readline');
+require('dotenv').config();
 
 const inputFolderPath = './input';
 const outputFolderPath = './output';
+
+// Read .env setting
+const commonPassword = process.env.COMMON_PASSWORD;
+const fileNameTemplate = process.env.FILE_NAME_TEMPLATE;
 
 async function addPasswordToPDF (inputPdfPath, outputPdfPath, password) {
     // Read & Load the existing PDF file
@@ -24,21 +29,25 @@ async function addPasswordToPDF (inputPdfPath, outputPdfPath, password) {
 }
 
 async function getPasswordFromUser () {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
-
     return new Promise((resolve, reject) => {
-        rl.question('Please enter the password: ', password => {
-            rl.close();
-            if (password.trim() !== '') {
-                resolve(password.trim());
-            } else {
-                console.log('\x1b[31m', 'Error: No password entered.', '\x1b[0m');
-                reject();
-            }
-        });
+        if (commonPassword && commonPassword.trim() !== '') {
+            console.log('Using common password from .env file.');
+            resolve(commonPassword.trim());
+        } else {
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout,
+            });
+            rl.question('Please enter the password: ', password => {
+                rl.close();
+                if (password.trim() !== '') {
+                    resolve(password.trim());
+                } else {
+                    console.log('\x1b[31m', 'Error: No password entered.', '\x1b[0m');
+                    reject();
+                }
+            });
+        }
     });
 }
 
@@ -64,6 +73,31 @@ async function removeFile(filePath) {
     }
 }
 
+function getFileName(tmpText) {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+
+    // Calculate previous year, month, and day
+    const previousYear = year - 1;
+    const previousMonth = month === 1 ? 12 : month - 1;
+    const previousDay = new Date(year, month - 1, 0).getDate(); // Last day of the previous month
+
+    // Calculate previous year and month in YYYYMM format
+    const previousYearMonth = `${previousYear}${previousMonth < 10 ? '0' + previousMonth : previousMonth}`;
+
+    // Replace placeholders with calculated values
+    const result = tmpText
+        .replace(/\{\{yyyy\}\}/g, year)
+        .replace(/\{\{yyyymm\}\}/g, `${year}${month < 10 ? '0' + month : month}`)
+        .replace(/\{\{yyyymmdd\}\}/g, `${year}${month < 10 ? '0' + month : month}${day < 10 ? '0' + day : day}`)
+        .replace(/\{\{yyyy-1\}\}/g, previousYear)
+        .replace(/\{\{yyyymm-1\}\}/g, previousYearMonth);
+
+    return result;
+}
+
 async function processFolder () {
     try {
         // Read all files in the input folder
@@ -72,7 +106,9 @@ async function processFolder () {
         // Process each PDF file in the folder
         for (const file of files) {
             const inputFilePath = path.join(inputFolderPath, file);
-            const outputFilePath = path.join(outputFolderPath, file);
+
+            const outputFileName = (fileNameTemplate && fileNameTemplate.trim() !== '') ? getFileName(fileNameTemplate) : file;
+            const outputFilePath = path.join(outputFolderPath, outputFileName);
 
             // Check if the file is a PDF
             if (path.extname(file).toLowerCase() === '.pdf') {
