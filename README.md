@@ -16,7 +16,7 @@ yarn install
 
 1. Put the PDF file in `input` folder.
 
-2. (Optionally) Modify the settings in the .env file for "COMMON_PASSWORD" and "FILE_NAME_TEMPLATE". If not needed, please comment out or remove the line.
+2. (Optionally) Create the `.env` file and modify the settings for "COMMON_PASSWORD" and "FILE_NAME_TEMPLATE". If not needed, please comment out or remove the line.
 
 3. To start the script:
 
