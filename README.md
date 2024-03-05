@@ -4,12 +4,12 @@ This script is designed to add password protection to PDF files in a specified i
 
 ## Prerequisites
 
-- Node.js: Make sure you have Node.js installed on your machine. You can download it from [https://nodejs.org/](https://nodejs.org/).
+- Node.js: Make sure you have Node.js and Yarn installed on your machine. You can download it from [https://nodejs.org/](https://nodejs.org/) and [https://yarnpkg.com/](https://yarnpkg.com/).
 
 ## Installation
 
 ``` bash
-npm install
+yarn install
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ npm install
 2. Run the script using the following command:
 
 ``` bash
-npm run start
+yarn start
 ```
 
 or
@@ -42,6 +42,6 @@ node index.js
 1. If you open the encrypted PDF file and then rerun the script, the file cannot be deleted, and an error occurs.
 
 ## License
-This script is licensed under the MIT License - see the LICENSE.md file for details.
+This script is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 Feel free to customize this README according to your specific requirements and provide additional information as needed. If your script evolves or has more complex features, you may need to update the README accordingly.
