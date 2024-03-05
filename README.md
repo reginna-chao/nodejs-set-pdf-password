@@ -16,7 +16,14 @@ yarn install
 
 1. Put the PDF file in `input` folder.
 
-2. Run the script using the following command:
+2. (Optionally) Modify the settings in the .env file for "COMMON_PASSWORD" and "FILE_NAME_TEMPLATE". If not needed, please comment out or remove the line.
+
+3. To start the script:
+
+  - For Windows, double-click on `start.bat`.
+  - For Linux and MacOS, run `start.sh`.
+
+  Alternatively, you can run the script using one of the following commands in your terminal:
 
 ``` bash
 yarn start
@@ -28,9 +35,9 @@ or
 node index.js
 ```
 
-3. The script will prompt you to enter a password for each PDF file in the input folder. Enter the password when prompted.
+4. The script will prompt you to enter a password for each PDF file in the input folder. Enter the password when prompted.
 
-4. The encrypted PDF files will be saved in the output folder with the same filenames.
+5. The encrypted PDF files will be saved in the output folder with the same filenames.
 
 ## Important Note
 
