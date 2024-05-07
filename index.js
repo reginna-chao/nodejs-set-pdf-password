@@ -25,7 +25,7 @@ async function addPasswordToPDF (inputPdfPath, outputPdfPath, password) {
         // Write the modified PDF to a new file
         .endPDF();
 
-    console.log(`Password protection added to ${outputPdfPath}`);
+    consoleMessage('highlight', `Password protection added to ${outputPdfPath}`);
 }
 
 async function getPasswordFromUser () {
@@ -80,7 +80,7 @@ function getFileName(tmpText) {
     const day = d.getDate();
 
     // Calculate previous year, month, and day
-    const previousYear = year - 1;
+    const previousYear = month === 1 ? year - 1 : year;
     const previousMonth = month === 1 ? 12 : month - 1;
     const previousDay = new Date(year, month - 1, 0).getDate(); // Last day of the previous month
 
@@ -125,6 +125,23 @@ async function processFolder () {
         console.error('Error processing folder:', error);
     }
 }
+
+// show console message with color
+function consoleMessage(type, message) {
+    switch (type) {
+      case 'error':
+        console.error('\x1b[31m', message, '\x1b[0m');
+        break;
+      case 'warn':
+        console.warn('\x1b[33m', message, '\x1b[0m');
+        break;
+      case 'highlight':
+        console.log('\x1b[36m', message, '\x1b[0m');
+        break;
+      default:
+        console.log(message);
+    }
+  }
 
 // Call the function to process the folder
 processFolder();
