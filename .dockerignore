@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+
+# Git
+.git
+.gitignore
+
+# Environment files (should be mounted at runtime)
+.env
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+muhammara-error.log
+
+# Input/Output folders content (should be mounted at runtime)
+input/*
+output/*
+!input/.gitkeep
+!output/.gitkeep
+
+# Documentation
+README.md
+LICENSE
+
+# Scripts
+*.bat
+*.sh

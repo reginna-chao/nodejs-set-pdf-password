@@ -39,6 +39,73 @@ node index.js
 
 5. The encrypted PDF files will be saved in the output folder with the same filenames.
 
+---
+
+## Docker Usage
+
+You can also run this application using Docker, which eliminates the need to install Node.js and dependencies on your local machine.
+
+### Building the Docker Image
+
+Build the Docker image with the following command:
+
+``` bash
+docker build -t nodejs-set-pdf-password .
+```
+
+### Running with Docker
+
+**Basic usage (interactive mode):**
+
+``` bash
+docker run -it --rm \
+  -v $(pwd)/input:/app/input \
+  -v $(pwd)/output:/app/output \
+  nodejs-set-pdf-password
+```
+
+**With environment file (non-interactive mode):**
+
+If you have a `.env` file with `COMMON_PASSWORD` set, you can run the container without manual password input:
+
+``` bash
+docker run -it --rm \
+  -v $(pwd)/input:/app/input \
+  -v $(pwd)/output:/app/output \
+  -v $(pwd)/.env:/app/.env \
+  nodejs-set-pdf-password
+```
+
+**For Windows PowerShell:**
+
+``` powershell
+docker run -it --rm `
+  -v ${PWD}/input:/app/input `
+  -v ${PWD}/output:/app/output `
+  -v ${PWD}/.env:/app/.env `
+  nodejs-set-pdf-password
+```
+
+**For Windows CMD:**
+
+``` cmd
+docker run -it --rm ^
+  -v %cd%/input:/app/input ^
+  -v %cd%/output:/app/output ^
+  -v %cd%/.env:/app/.env ^
+  nodejs-set-pdf-password
+```
+
+### Docker Command Explanation
+
+- `-it`: Enables interactive mode (required for password input)
+- `--rm`: Automatically removes the container after it exits
+- `-v $(pwd)/input:/app/input`: Mounts your local `input` folder to the container
+- `-v $(pwd)/output:/app/output`: Mounts your local `output` folder to the container
+- `-v $(pwd)/.env:/app/.env`: Mounts your `.env` file for configuration
+
+---
+
 ## Important Note
 
 1. Ensure that you handle passwords securely and do not share them in an insecure manner.
